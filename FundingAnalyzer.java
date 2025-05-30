@@ -1,14 +1,25 @@
 import java.io.*;
 import java.util.*;
 
+/*
+ * Handles loading, sorting and analyzing funding data. Applies recursive merge sort, writes sorted data in an output text file, and provides an equity analysis for Indigenous communities.
+ */
 public class FundingAnalyzer{
     
     private List<FundingEntry> entries;
     
+    /*
+     *  Constructs an empty FundingAnalyzer
+     */
     public FundingAnalyzer(){
         entries = new ArrayList<>();
     }
     
+ /*
+     * Loads funding entries from a text file and creates objects based on the text file meta data.
+     * @param filename path to the input file
+     * @throws IOException if the file access does not work
+ */    
 public void loadFromFile (String filename) throws IOException {
     Scanner sc = new Scanner (new File(filename));
     while(sc.hasNextLine()){
@@ -40,7 +51,12 @@ public void loadFromFile (String filename) throws IOException {
     
     sc.close();
 }
-    
+
+/*
+ * Recursively performs merge sort on the list of entries.
+ * @param list the list needed to be sorted
+ * @return a sorted list of funding entries
+ */
 private List<FundingEntry> mergeSort (List<FundingEntry> list) {
    if (list.size() <= 1)
    {
@@ -54,10 +70,16 @@ private List<FundingEntry> mergeSort (List<FundingEntry> list) {
     return merge(left, right);
 }
 
+/*
+ * Merges two halves of a sorted list.
+ */
 private List<FundingEntry> merge (List<FundingEntry> left, List<FundingEntry> right) {
     return mergeRecursive (left, right, 0, 0, new ArrayList<>());
 }
-    
+
+/*
+ * Recursively merges entries by comparing amounts of funding in descending order.
+ */
 private List<FundingEntry> mergeRecursive(List<FundingEntry> left, List<FundingEntry> right, int i, int j, List<FundingEntry> merged) {
     if (i >= left.size() && j>= right.size()) {
         return merged;
@@ -75,7 +97,11 @@ private List<FundingEntry> mergeRecursive(List<FundingEntry> left, List<FundingE
     }
 }
     
-
+/*
+ * Writes all funding entries to a file and generates an equity analysis summary.
+ * @param filename the file to write
+ * @throws IOExcpetion if writing the file does not work
+ */
 public void writeNew (String filename) throws IOException {
     int indigenousCount = 0;
     int totalEntries = 0;
@@ -120,6 +146,11 @@ public void writeNew (String filename) throws IOException {
     p.close();
 }
 
+/*
+ * Sorts the entries based on amount and writes the sorted entries in the output file.
+ * @param outputFile file where the sorted entries are written
+ * @throws IOException if writing the file does not work
+ */
 public void sort (String outputFile) throws IOException {
     entries = mergeSort(entries);
     writeNew(outputFile);
